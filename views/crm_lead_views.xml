@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add 'Source Upwork Bid' field to the CRM Lead form -->
+    <record id="crm_lead_form_inherit_upwork" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.upwork</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="upwork_bid_id" readonly="1"
+                       invisible="not upwork_bid_id"/>
+                <field name="is_from_upwork" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

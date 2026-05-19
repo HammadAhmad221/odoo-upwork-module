@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_upwork_profile_list" model="ir.ui.view">
+        <field name="name">upwork.profile.list</field>
+        <field name="model">upwork.profile</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="username"/>
+                <field name="profile_type"/>
+                <field name="employee_id"/>
+                <field name="connects_balance"/>
+                <field name="bid_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_upwork_profile_form" model="ir.ui.view">
+        <field name="name">upwork.profile.form</field>
+        <field name="model">upwork.profile</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_bids" type="object"
+                                class="oe_stat_button" icon="fa-list">
+                            <field name="bid_count" widget="statinfo"
+                                   string="Bids"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Awais"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="username"/>
+                            <field name="profile_url" widget="url"/>
+                            <field name="profile_type"/>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="hourly_rate_default"/>
+                            <field name="currency_id"/>
+                            <field name="connects_balance"/>
+                            <field name="monthly_refill"/>
+                            <field name="sequence"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Notes"/>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_upwork_profile_kanban" model="ir.ui.view">
+        <field name="name">upwork.profile.kanban</field>
+        <field name="model">upwork.profile</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="bid_count"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                            <div>
+                                <span><field name="username"/></span>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="bid_count"/> bids
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_upwork_profile" model="ir.actions.act_window">
+        <field name="name">Upwork Profiles</field>
+        <field name="res_model">upwork.profile</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_upwork_cover_template_list" model="ir.ui.view">
+        <field name="name">upwork.cover.template.list</field>
+        <field name="model">upwork.cover.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="usage_count"/>
+                <field name="win_count"/>
+                <field name="win_rate" widget="percentage"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_upwork_cover_template_form" model="ir.ui.view">
+        <field name="name">upwork.cover.template.form</field>
+        <field name="model">upwork.cover.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Performance">
+                            <field name="usage_count"/>
+                            <field name="win_count"/>
+                            <field name="win_rate" widget="percentage"/>
+                        </group>
+                    </group>
+                    <separator string="Body"/>
+                    <field name="body"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_upwork_cover_template" model="ir.actions.act_window">
+        <field name="name">Cover Letter Templates</field>
+        <field name="res_model">upwork.cover.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

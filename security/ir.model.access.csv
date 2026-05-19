@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_upwork_bid_bidder,upwork.bid bidder,model_upwork_bid,group_upwork_bidder,1,1,1,0
+access_upwork_bid_lead,upwork.bid team lead,model_upwork_bid,group_upwork_team_lead,1,1,1,1
+access_upwork_bid_stage_user,upwork.bid.stage user,model_upwork_bid_stage,group_upwork_bidder,1,0,0,0
+access_upwork_bid_stage_lead,upwork.bid.stage team lead,model_upwork_bid_stage,group_upwork_team_lead,1,1,1,1
+access_upwork_profile_user,upwork.profile user,model_upwork_profile,group_upwork_bidder,1,0,0,0
+access_upwork_profile_lead,upwork.profile team lead,model_upwork_profile,group_upwork_team_lead,1,1,1,1
+access_upwork_category_user,upwork.category user,model_upwork_category,group_upwork_bidder,1,0,0,0
+access_upwork_category_lead,upwork.category team lead,model_upwork_category,group_upwork_team_lead,1,1,1,1
+access_upwork_skill_tag_user,upwork.skill.tag user,model_upwork_skill_tag,group_upwork_bidder,1,1,1,0
+access_upwork_skill_tag_lead,upwork.skill.tag team lead,model_upwork_skill_tag,group_upwork_team_lead,1,1,1,1
+access_upwork_cover_template_user,upwork.cover.template user,model_upwork_cover_template,group_upwork_bidder,1,0,0,0
+access_upwork_cover_template_lead,upwork.cover.template team lead,model_upwork_cover_template,group_upwork_team_lead,1,1,1,1

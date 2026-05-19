@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root menu -->
+    <menuitem id="menu_upwork_root"
+              name="Upwork Bids"
+              sequence="20"
+              groups="group_upwork_bidder"/>
+
+    <!-- Bids submenu -->
+    <menuitem id="menu_upwork_bids_main"
+              name="Bids"
+              parent="menu_upwork_root"
+              sequence="10"/>
+
+    <menuitem id="menu_upwork_bids_all"
+              name="All Bids"
+              parent="menu_upwork_bids_main"
+              action="action_upwork_bid"
+              sequence="10"
+              groups="group_upwork_team_lead"/>
+
+    <menuitem id="menu_upwork_bids_my"
+              name="My Bids"
+              parent="menu_upwork_bids_main"
+              action="action_upwork_bid_my"
+              sequence="20"/>
+
+    <menuitem id="menu_upwork_bids_replied"
+              name="Replied Bids"
+              parent="menu_upwork_bids_main"
+              action="action_upwork_bid_replied"
+              sequence="30"/>
+
+    <menuitem id="menu_upwork_bids_won"
+              name="Won Bids"
+              parent="menu_upwork_bids_main"
+              action="action_upwork_bid_won"
+              sequence="40"/>
+
+    <!-- Configuration submenu -->
+    <menuitem id="menu_upwork_config"
+              name="Configuration"
+              parent="menu_upwork_root"
+              sequence="100"
+              groups="group_upwork_team_lead"/>
+
+    <menuitem id="menu_upwork_stages"
+              name="Stages"
+              parent="menu_upwork_config"
+              action="action_upwork_bid_stage"
+              sequence="10"/>
+
+    <menuitem id="menu_upwork_profiles"
+              name="Upwork Profiles"
+              parent="menu_upwork_config"
+              action="action_upwork_profile"
+              sequence="20"/>
+
+    <menuitem id="menu_upwork_categories"
+              name="Categories"
+              parent="menu_upwork_config"
+              action="action_upwork_category"
+              sequence="30"/>
+
+    <menuitem id="menu_upwork_skills"
+              name="Skill Tags"
+              parent="menu_upwork_config"
+              action="action_upwork_skill_tag"
+              sequence="40"/>
+
+    <menuitem id="menu_upwork_templates"
+              name="Cover Letter Templates"
+              parent="menu_upwork_config"
+              action="action_upwork_cover_template"
+              sequence="50"/>
+</odoo>

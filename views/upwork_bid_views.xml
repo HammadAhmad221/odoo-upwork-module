@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         KANBAN VIEW
+         ============================================================ -->
+    <record id="view_upwork_bid_kanban" model="ir.ui.view">
+        <field name="name">upwork.bid.kanban</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" class="o_kanban_small_column"
+                    quick_create="false" sample="1">
+                <field name="stage_id"/>
+                <field name="color"/>
+                <field name="priority"/>
+                <field name="upwork_profile_id"/>
+                <field name="bidder_id"/>
+                <field name="client_budget"/>
+                <field name="proposed_budget"/>
+                <field name="connects_used"/>
+                <field name="client_country_id"/>
+                <field name="client_rating"/>
+                <field name="skill_tag_ids"/>
+                <field name="converted_to_crm"/>
+                <field name="currency_id"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <templates>
+                    <t t-name="menu">
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <div class="text-muted small">
+                            <field name="reference"/>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Profile:</strong> <field name="upwork_profile_id"/>
+                        </div>
+                        <div t-if="record.bidder_id.raw_value">
+                            <strong>Bidder:</strong> <field name="bidder_id"/>
+                        </div>
+                        <div t-if="record.client_budget.raw_value">
+                            <strong>Client:</strong>
+                            <field name="client_budget" widget="monetary"/>
+                        </div>
+                        <div t-if="record.proposed_budget.raw_value">
+                            <strong>Our Bid:</strong>
+                            <field name="proposed_budget" widget="monetary"/>
+                        </div>
+                        <div t-if="record.connects_used.raw_value">
+                            <strong>Connects:</strong> <field name="connects_used"/>
+                        </div>
+                        <field name="skill_tag_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                        <footer class="pt-1">
+                            <field name="priority" widget="priority" class="me-2"/>
+                            <field name="activity_ids" widget="kanban_activity"/>
+                            <span t-if="record.converted_to_crm.raw_value"
+                                  class="badge text-bg-success ms-auto">In CRM</span>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         FORM VIEW (THE 3-TAB STRUCTURE)
+         ============================================================ -->
+    <record id="view_upwork_bid_form" model="ir.ui.view">
+        <field name="name">upwork.bid.form</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_convert_to_crm" type="object"
+                            string="Convert to CRM" class="btn-primary"
+                            invisible="converted_to_crm"/>
+                    <button name="action_view_crm_lead" type="object"
+                            string="View CRM Opportunity" class="btn-secondary"
+                            invisible="not converted_to_crm"/>
+                    <button name="action_mark_won" type="object"
+                            string="Mark Won" class="btn-success"
+                            invisible="outcome == 'won'"/>
+                    <button name="action_mark_lost" type="object"
+                            string="Mark Lost"
+                            invisible="outcome == 'lost'"/>
+                    <field name="stage_id" widget="statusbar"
+                           options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Won" bg_color="text-bg-success"
+                            invisible="outcome != 'won'"/>
+                    <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger"
+                            invisible="outcome != 'lost'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Job title..."/>
+                        </h1>
+                        <field name="reference" readonly="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="upwork_profile_id"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="bidder_id"/>
+                            <field name="bidder_user_id"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="priority"/>
+                            <field name="outcome"/>
+                            <field name="submitted_date"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="converted_to_crm" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <!-- TAB 1: JOB & CLIENT -->
+                        <page string="Job &amp; Client" name="job_client">
+                            <group>
+                                <group string="Job Details">
+                                    <field name="job_url" widget="url"/>
+                                    <field name="job_type"/>
+                                    <field name="job_category_id"/>
+                                    <field name="experience_level"/>
+                                    <field name="job_duration"/>
+                                    <field name="job_posted_date"/>
+                                    <field name="client_budget"/>
+                                    <field name="client_budget_max"/>
+                                    <field name="total_proposals"/>
+                                    <field name="skill_tag_ids"
+                                           widget="many2many_tags"
+                                           options="{'color_field': 'color'}"/>
+                                </group>
+                                <group string="Client Details">
+                                    <field name="client_name"/>
+                                    <field name="client_country_id"/>
+                                    <field name="client_total_spent"/>
+                                    <field name="client_hire_rate"/>
+                                    <field name="client_rating"/>
+                                    <field name="client_reviews_count"/>
+                                    <field name="client_jobs_posted"/>
+                                    <field name="client_payment_verified"/>
+                                    <field name="client_member_since"/>
+                                </group>
+                            </group>
+                            <separator string="Job Description"/>
+                            <field name="job_description"
+                                   placeholder="Paste the Upwork job description here..."/>
+                        </page>
+
+                        <!-- TAB 2: PROPOSAL -->
+                        <page string="Proposal" name="proposal">
+                            <group>
+                                <group string="Our Proposal">
+                                    <field name="proposed_budget"/>
+                                    <field name="proposed_rate_type"/>
+                                    <field name="proposed_timeline"/>
+                                    <field name="budget_variance" readonly="1"/>
+                                </group>
+                                <group string="Connects &amp; Template">
+                                    <field name="connects_used"/>
+                                    <field name="boosted_bid"/>
+                                    <field name="boost_connects"
+                                           invisible="not boosted_bid"/>
+                                    <field name="total_connects"/>
+                                    <field name="cover_template_id"/>
+                                    <field name="attachments_sent"/>
+                                </group>
+                            </group>
+                            <separator string="Proposal / Cover Letter"/>
+                            <field name="proposal_description"
+                                   placeholder="What we wrote in the proposal..."/>
+                            <separator string="Screening Question Answers"/>
+                            <field name="screening_answers"/>
+                        </page>
+
+                        <!-- TAB 3: BUSINESS DEVELOPMENT -->
+                        <page string="Business Dev" name="bd">
+                            <group>
+                                <group string="Tracking">
+                                    <field name="viewed_date"/>
+                                    <field name="replied_date"/>
+                                    <field name="interview_date"/>
+                                    <field name="closed_date"/>
+                                    <field name="response_time_hours" readonly="1"/>
+                                    <field name="days_since_submission" readonly="1"/>
+                                </group>
+                                <group string="Outcome">
+                                    <field name="lost_reason_id"
+                                           invisible="outcome != 'lost'"/>
+                                    <field name="final_contract_value"
+                                           invisible="outcome != 'won'"/>
+                                    <field name="crm_lead_id" readonly="1"/>
+                                    <field name="partner_id" readonly="1"/>
+                                    <field name="conversion_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="Internal Notes"/>
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         LIST (TREE) VIEW
+         ============================================================ -->
+    <record id="view_upwork_bid_list" model="ir.ui.view">
+        <field name="name">upwork.bid.list</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <list multi_edit="1" sample="1">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="upwork_profile_id"/>
+                <field name="bidder_id"/>
+                <field name="stage_id"/>
+                <field name="client_budget"/>
+                <field name="proposed_budget"/>
+                <field name="connects_used"/>
+                <field name="submitted_date"/>
+                <field name="outcome"/>
+                <field name="converted_to_crm" widget="boolean_toggle"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         SEARCH VIEW
+         ============================================================ -->
+    <record id="view_upwork_bid_search" model="ir.ui.view">
+        <field name="name">upwork.bid.search</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="upwork_profile_id"/>
+                <field name="bidder_id"/>
+                <field name="client_name"/>
+                <field name="skill_tag_ids"/>
+                <separator/>
+                <filter string="My Bids" name="my_bids"
+                        domain="[('bidder_user_id','=',uid)]"/>
+                <separator/>
+                <filter string="Today" name="today"
+                        domain="[('submitted_date','&gt;=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week"
+                        domain="[('submitted_date','&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month"
+                        domain="[('submitted_date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Replied" name="replied"
+                        domain="[('replied_date','!=', False)]"/>
+                <filter string="Won" name="won"
+                        domain="[('outcome','=','won')]"/>
+                <filter string="Lost" name="lost"
+                        domain="[('outcome','=','lost')]"/>
+                <filter string="In CRM" name="in_crm"
+                        domain="[('converted_to_crm','=', True)]"/>
+                <filter string="Pending" name="pending"
+                        domain="[('outcome','=','pending')]"/>
+                <separator/>
+                <filter string="Archived" name="archived"
+                        domain="[('active','=', False)]"/>
+                <group>
+                    <filter string="Stage" name="group_stage"
+                            context="{'group_by':'stage_id'}"/>
+                    <filter string="Profile" name="group_profile"
+                            context="{'group_by':'upwork_profile_id'}"/>
+                    <filter string="Bidder" name="group_bidder"
+                            context="{'group_by':'bidder_id'}"/>
+                    <filter string="Category" name="group_category"
+                            context="{'group_by':'job_category_id'}"/>
+                    <filter string="Outcome" name="group_outcome"
+                            context="{'group_by':'outcome'}"/>
+                    <filter string="Submitted Date" name="group_date"
+                            context="{'group_by':'submitted_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         PIVOT VIEW
+         ============================================================ -->
+    <record id="view_upwork_bid_pivot" model="ir.ui.view">
+        <field name="name">upwork.bid.pivot</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="upwork_profile_id" type="row"/>
+                <field name="outcome" type="col"/>
+                <field name="connects_used" type="measure"/>
+                <field name="proposed_budget" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         GRAPH VIEW
+         ============================================================ -->
+    <record id="view_upwork_bid_graph" model="ir.ui.view">
+        <field name="name">upwork.bid.graph</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="upwork_profile_id"/>
+                <field name="stage_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         CALENDAR VIEW
+         ============================================================ -->
+    <record id="view_upwork_bid_calendar" model="ir.ui.view">
+        <field name="name">upwork.bid.calendar</field>
+        <field name="model">upwork.bid</field>
+        <field name="arch" type="xml">
+            <calendar string="Bids" date_start="submitted_date"
+                      color="upwork_profile_id" mode="month">
+                <field name="name"/>
+                <field name="upwork_profile_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         ACTION
+         ============================================================ -->
+    <record id="action_upwork_bid" model="ir.actions.act_window">
+        <field name="name">Upwork Bids</field>
+        <field name="res_model">upwork.bid</field>
+        <field name="view_mode">kanban,list,form,pivot,graph,calendar</field>
+        <field name="search_view_id" ref="view_upwork_bid_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Upwork bid
+            </p>
+            <p>
+                Track every proposal your team submits on Upwork.
+                Drag cards between stages, convert winners to CRM with one click.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action: My Bids (default filter applied) -->
+    <record id="action_upwork_bid_my" model="ir.actions.act_window">
+        <field name="name">My Bids</field>
+        <field name="res_model">upwork.bid</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_upwork_bid_search"/>
+        <field name="context">{'search_default_my_bids': 1}</field>
+    </record>
+
+    <!-- Action: Replied Bids -->
+    <record id="action_upwork_bid_replied" model="ir.actions.act_window">
+        <field name="name">Replied Bids</field>
+        <field name="res_model">upwork.bid</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_upwork_bid_search"/>
+        <field name="context">{'search_default_replied': 1}</field>
+    </record>
+
+    <!-- Action: Won Bids -->
+    <record id="action_upwork_bid_won" model="ir.actions.act_window">
+        <field name="name">Won Bids</field>
+        <field name="res_model">upwork.bid</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_upwork_bid_search"/>
+        <field name="context">{'search_default_won': 1}</field>
+    </record>
+
+    <!-- ============================================================
+         SCHEDULED ACTION (CRON)
+         ============================================================ -->
+    <record id="cron_archive_stale_bids" model="ir.cron">
+        <field name="name">Upwork: Archive stale bids (14d no response)</field>
+        <field name="model_id" ref="model_upwork_bid"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_archive_stale_bids()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>
