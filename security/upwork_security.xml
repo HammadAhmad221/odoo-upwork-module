@@ -17,6 +17,7 @@
             <field name="name">Bidder</field>
             <field name="privilege_id" ref="upwork_groups_privilege"/>
             <field name="comment">Can create and edit own bids only.</field>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
         <record id="group_upwork_team_lead" model="res.groups">
@@ -24,6 +25,7 @@
             <field name="privilege_id" ref="upwork_groups_privilege"/>
             <field name="implied_ids" eval="[(4, ref('group_upwork_bidder'))]"/>
             <field name="comment">Can see and edit all bids; manages templates and profiles.</field>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
         <record id="group_upwork_manager" model="res.groups">
@@ -31,6 +33,7 @@
             <field name="privilege_id" ref="upwork_groups_privilege"/>
             <field name="implied_ids" eval="[(4, ref('group_upwork_team_lead'))]"/>
             <field name="comment">Full access including reports and configuration.</field>
+            <field name="users" eval="[(4, ref('base.user_admin'))]"/>
         </record>
     </data>
 </odoo>

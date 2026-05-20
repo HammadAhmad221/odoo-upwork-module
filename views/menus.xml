@@ -3,8 +3,8 @@
     <!-- Root menu -->
     <menuitem id="menu_upwork_root"
               name="Upwork Bids"
-              sequence="20"
-              groups="group_upwork_bidder"/>
+              web_icon="upwork_bid_tracker,static/description/icon.png"
+              sequence="20"/>
 
     <!-- Bids submenu -->
     <menuitem id="menu_upwork_bids_main"
